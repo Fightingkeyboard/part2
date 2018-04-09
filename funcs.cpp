@@ -1,7 +1,12 @@
 #include <iostream>
 #include <string>
 
-std::string removeLeadingSpaces(std::string line){ 
+
+//Comment Shariar Kabir
+// This code is very readable.
+// It checks until there is a character reached, and then returns
+// The substring of everything after the charatcer
+std::string removeLeadingSpaces(std::string line){
 	for (int i = 0; i < line.size(); i++){
 		if (!isspace(line[i])){
 			std::string result = line.substr(i);
@@ -10,15 +15,17 @@ std::string removeLeadingSpaces(std::string line){
 	}
 }
 
-std::string unindent(){
+// Just gets rid of all leading spaces
+// One issue is that the last line will have a newline, when it should not
+// Also, it makes more sense, to take in a line as a variable instead of cin
+std::string unindent(std::string line){
 	std::string result;
-	std::string line;
-	while (getline(std::cin, line)){
-		result += removeLeadingSpaces(line) + "\n";
-	}
+	result += removeLeadingSpaces(line) + "\n";
 	return result;
 }
 
+
+// Easy to understand, adds to counter when a char appears
 int countChar(std::string line, char c){
 	int count = 0;
 	for (int i = 0; i < line.size(); i++){
@@ -29,21 +36,23 @@ int countChar(std::string line, char c){
 	return count;
 }
 
+
+// Why was openblocks counted first before closedblocks
 std::string indent(){
-	int openBlock = 0;
-	int closeBlock = 0;
 	int tabs = 0;
 	std::string result;
 	std::string line;
+	// Changed removeLeadingSpaces to unindent
 	while (getline(std::cin, line)){
-		line = removeLeadingSpaces(line);
-		openBlock += countChar(line, '{');
-		closeBlock += countChar(line, '}');
-		tabs = (openBlock - closeBlock);
-		result += line + "\n";
+		line = unindent(line);
+		tabs -= countChar(line, '}');
+		// Before it was adding spaces, instead its eaier to add a tab
 		for (int i = 0; i < tabs; i++){
-			result += "	";
+			result += "\t";
 		}
+		//std::cout << tabs<< std::endl;
+		result += line;
+		tabs += countChar(line, '{');
 	}
 	return result;
 }
